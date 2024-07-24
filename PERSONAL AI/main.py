@@ -1,17 +1,15 @@
-import pyttsx3 #pip install pyttsx3
-import speech_recognition as sr #pip install speechRecognition
+import pyttsx3  #pip install pyttsx3
+import speech_recognition as sr  #pip install speechRecognition
 import datetime
-import wikipedia #pip install wikipedia
+import wikipedia  #pip install wikipedia
 import webbrowser
 import os
 import smtplib
 
-
-
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 print(voices[1].id)
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice', voices[1].id)
 
 
 def speak(audio):
@@ -21,16 +19,17 @@ def speak(audio):
 
 def wishMe():
     hour = int(datetime.datetime.now().hour)
-    if hour>=0 and hour<12:
+    if hour >= 0 and hour < 12:
         speak("Good Morning!")
 
-    elif hour>=12 and hour<18:
+    elif hour >= 12 and hour < 18:
         speak("Good Afternoon!")
 
     else:
         speak("Good Evening!")
 
     speak(" hello SAHIL sir, I am BIRD, how may i help you ")
+
 
 def takeCommand():
     #It takes microphone input from the user and returns string output
@@ -52,6 +51,7 @@ def takeCommand():
         return "None"
     return query
 
+
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -60,23 +60,37 @@ def sendEmail(to, content):
     server.sendmail('shahil.ks011@gmail.com', to, content)
     server.close()
 
+
 if __name__ == "__main__":
     wishMe()
     while True:
-    # if 1:
+        # if 1:
 
         text = takeCommand().lower()
-    # text = rec_audio()
-    # speak = ""
+        # text = rec_audio()
+        # speak = ""
 
-    # Logic for executing tasks based on query
-        if 'wikipedia' in text:
+        # Logic for executing tasks based on query
+        #     if 'wikipedia' in text:
+        #         speak('Searching Wikipedia...')
+        #         text = query.replace("wikipedia", " ")
+        #         results = wikipedia.summary(query, sentences=2)
+        #         speak("According to Wikipedia")
+        #         print(results)
+        #         speak(results)
+
+        if 'wikipedia' in text.lower():
             speak('Searching Wikipedia...')
-            text = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
-            print(results)
-            speak(results)
+            query = text.replace("wikipedia", "").strip()  # Remove 'wikipedia' and leading/trailing spaces
+            try:
+                results = wikipedia.summary(query, sentences=2)
+                speak("According to Wikipedia")
+                print(results)
+                speak(results)
+            except wikipedia.exceptions.DisambiguationError as e:
+                speak(f"Multiple results found. Please specify: {e}")
+            except wikipedia.exceptions.PageError:
+                speak("Page not found. Please try again.")
 
         elif 'open youtube' in text:
             webbrowser.open("youtube.com")
@@ -90,68 +104,70 @@ if __name__ == "__main__":
         elif 'open stackoverflow' in text:
             webbrowser.open("stackoverflow.com")
 
-        # elif "who are you" in text or "define yourself" in text:
-        #     speak = speak + "Hello, I am an Assistant. Your Assistant. I am here to make your life easier. You can command me to perform various tasks such as asking questions or opening applications etcetera"
+        elif "who are you" in text or "define yourself" in text:
+            speak(
+                "Hello, I am an Assistant. Your Assistant. I am here to make your life easier. You can command me to perform various tasks such as asking questions or opening applications etcetera")
 
-        elif "who made you" in text or "created you" in text or " kon bnaya tumko " in text or " tumhe kisne bnaya " in text:
-            speak = speak + "I was created by Sahil Singh"
+        elif "who made you" in text or "created you" in text or " kon bnaya tumko " in text or " tumhe kisne banaya " in text:
+            speak("I was created by Sahil Singh")
 
         elif "who is Sahil" in text or "who is sahil" in text:
-            speak = speak + "Sahil is a student of Electronics and Communication Engineering at Lovely Delhi technological University. He is a passionate coder and a tech enthusiast."
+            speak(
+                "Sahil is a student of Electronics and Communication Engineering at Lovely Delhi technological University. He is a passionate coder and a tech enthusiast.")
 
         elif "who is your creator" in text or "who is your developer" in text:
-            speak = speak + "My creator is Sahil Singh"
+            speak("My creator is Sahil Singh")
 
         elif "who is your father" in text or "who is your dad" in text:
-            speak = speak + "My father is Sanjay kumar mukul"
+            speak("My father is Sanjay kumar mukul")
 
         elif "who is your mother" in text or "who is your mom" in text:
-            speak = speak + "My mother is Soni kumari"
+            speak("My mother is Soni kumari")
 
         elif "who is your brother" in text or "who is your bro" in text:
-            speak = speak + "My brother is Shahil Kumar Singh"
+            speak("My brother is Shahil Kumar Singh")
 
         elif "who is your sister" in text or "who is your sis" in text:
-            speak = speak + "My sister is Shalini Kumari"
+            speak("My sister is Shalini Kumari")
 
         elif "who is your friend" in text or "who is your buddy" in text:
-            speak = speak + "My friend is Sahil Kumar Singh"
+            speak("My friend is Sahil Kumar Singh")
 
         elif "who is your enemy" in text or "who is your rival" in text:
-            speak = speak + "No one, I am a friendly AI"
+            speak("No one, I am a friendly AI")
 
         elif "who is your best friend" in text or "who is your best buddy" in text:
-            speak = speak + "My best friend is Sahil Kumar Singh"
+            speak("My best friend is Sahil Kumar Singh")
 
         elif "who is your crush" in text or "who is your love" in text:
-            speak = speak + "I am an AI, I don't have any crush"
+            speak("I am an AI, I don't have any crush")
 
         elif "who is your girlfriend" in text or "who is your wife" in text:
-            speak = speak + "I am an AI, I don't have any girlfriend or wife"
+            speak("I am an AI, I don't have any girlfriend or wife")
 
         elif "who is your boyfriend" in text or "who is your husband" in text:
-            speak = speak + "I am an AI, I don't have any boyfriend or husband"
+            speak("I am an AI, I don't have any boyfriend or husband")
 
         elif "who is your teacher" in text or "who is your mentor" in text:
-            speak = speak + "My teacher is Sahil Singh"
+            speak("My teacher is Sahil Singh")
 
         elif "who is your student" in text or "who is your pupil" in text:
-            speak = speak + "I am an AI, I don't have any student or pupil"
+            speak("I am an AI, I don't have any student or pupil")
 
         elif "who is your boss" in text or "who is your master" in text:
-            speak = speak + "My boss is Sahil Singh"
+            speak("My boss is Sahil Singh")
 
         elif "who is your employee" in text or "who is your worker" in text:
-            speak = speak + "I am an AI, I don't have any employee or worker"
+            speak("I am an AI, I don't have any employee or worker")
 
         elif ("who is your servant" in text or "who is your slave" in text):
-            speak = speak + "I am an AI, I don't have any servant or slave"
+            speak("I am an AI, I don't have any servant or slave")
 
         elif "who is your customer" in text or "who is your client" in text:
-            speak = speak + "I am an AI, I don't have any customer or client"
+            speak("I am an AI, I don't have any customer or client")
 
         elif "who is your fan" in text or "who is your follower" in text:
-            speak = speak + "I am an AI, I don't have any fan or follower"
+            speak("I am an AI, I don't have any fan or follower")
 
 
 
@@ -159,26 +175,36 @@ if __name__ == "__main__":
 
 
         elif "your name" in text:
-            speak = speak + "My name is Assistant"
+            speak("My name is Assistant")
 
         elif "who am I" in text:
-            speak = speak + "You must probably be a human"
+            speak("You must probably be a human")
 
         elif "why do you exist" in text or "why did you come to this word" in text:
-            speak = speak + "It is a secret"
+            speak("It is a secret")
 
         elif "how are you" in text:
-            speak = speak + "I am awesome, Thank you"
-            speak = speak + "\nHow are you?"
+            speak("I am awesome, Thank you")
+            speak("\nHow are you?")
 
         elif "fine" in text or "good" in text:
-            speak = speak + "It's good to know that your fine"
+            speak("It's good to know that your fine")
 
-        elif "don't listen" in text or "stop listening" in text or "do not listen" in text:
-            talk("for how many seconds do you want me to sleep")
-            a = int(rec_audio())
-            time.sleep(a)
-            speak = speak + str(a) + " seconds completed. Now you can ask me anything"
+        # elif "don't listen" in text or "stop listening" in text or "do not listen" in text:
+        #     talk("for how many seconds do you want me to sleep")
+        #     a = int(rec_audio())
+        #     time.sleep(a)
+        #     speak = speak + str(a) + " seconds completed. Now you can ask me anything"
+
+        elif any(phrase in text.lower() for phrase in ["don't listen", "stop listening", "do not listen"]):
+            talk("For how many seconds do you want me to sleep?")
+            try:
+                a = int(rec_audio())
+                time.sleep(a)
+                speak(f"{a} seconds completed. Now you can ask me anything")
+            except ValueError:
+                speak("Invalid input. Please try again.")
+
 
         elif "change background" in text or "change wallpaper" in text:
             img = r"Gallery\Wallpapers"
@@ -386,54 +412,11 @@ if __name__ == "__main__":
         elif "exit" in text or "quit" in text:
             exit()
 
-        elif "open" in text.lower():
-            if "chrome" in text.lower():
-                speak = speak + "Opening Google Chrome"
-                os.startfile(
-                    r"C:\Users\shahi\OneDrive\Desktop\SAHIL - Chrome.lnk"
-                )
-
-            elif "word" in text.lower():
-                speak = speak + "Opening Microsoft Word"
-                os.startfile(
-                    r"C:\...\WINWORD.EXE"
-                )
-
-            elif "excel" in text.lower():
-                speak = speak + "Opening Microsoft Excel"
-                os.startfile(
-                    r"C:\...\EXCEL.EXE"
-                )
-
-            elif "vs code" in text.lower():
-                speak = speak + "Opening Visual Studio Code"
-                os.startfile(
-                    r"C:\Users\shahi\Downloads\VSCodeUserSetup-x64-1.87.0.exe"
-                )
-
-            elif "youtube" in text.lower():
-                speak = speak + "Opening Youtube\n"
-                webbrowser.open("https://youtube.com/")
-
-            elif "google" in text.lower():
-                speak = speak + "Opening Google\n"
-                webbrowser.open("https://google.com/")
-
-            elif "stackoverflow" in text.lower():
-                speak = speak + "Opening StackOverFlow"
-                webbrowser.open("https://stackoverflow.com/")
-
-            else:
-                speak = speak + "Application not available"
-
-
-
-
-        elif 'play music' in query:
-            music_dir = 'https://wynk.in/music'
-            songs = os.listdir(music_dir)
-            print(songs)
-            os.startfile(os.path.join(music_dir, songs[0]))
+        # elif "play music in query:
+        #     music_dir = 'https://wynk.in/music'
+        #     songs = os.listdir(music_dir)
+        #     print(songs)
+        #     os.startfile(os.path.join(music_dir, songs[0]))
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
@@ -455,3 +438,68 @@ if __name__ == "__main__":
                 speak("Sorry sahil sir. I am not able to send this email")
 
 
+        elif "open" in text.lower():
+            if "chrome" in text.lower():
+                speak("Opening Google Chrome")
+                os.startfile(
+                    r"C:\Users\shahi\OneDrive\Desktop\SAHIL - Chrome.lnk"
+                )
+
+            elif "word" in text.lower():
+                speak("Opening Microsoft Word")
+                os.startfile(
+                    r"C:\...\WINWORD.EXE"
+                )
+
+            elif "excel" in text.lower():
+                speak("Opening Microsoft Excel")
+                os.startfile(
+                    r"C:\...\EXCEL.EXE"
+                )
+
+            elif "vs code" in text.lower():
+                speak("Opening Visual Studio Code")
+                os.startfile(
+                    r"C:\Users\shahi\Downloads\VSCodeUserSetup-x64-1.87.0.exe"
+                )
+
+            elif "youtube" in text.lower():
+                speak("Opening Youtube\n")
+                webbrowser.open("https://youtube.com/")
+
+            elif "google" in text.lower():
+                speak("Opening Google\n")
+                webbrowser.open("https://google.com/")
+
+            elif "stackoverflow" in text.lower():
+                speak("Opening StackOverFlow")
+                webbrowser.open("https://stackoverflow.com/")
+
+            else:
+                speak("Application not available")
+
+
+        # elif 'play music' in query:
+        #     music_dir = 'https://wynk.in/music'
+        #     songs = os.listdir(music_dir)
+        #     print(songs)
+        #     os.startfile(os.path.join(music_dir, songs[0]))
+        #
+        # elif 'the time' in query:
+        #     strTime = datetime.datetime.now().strftime("%H:%M:%S")
+        #     speak(f"Sir, the time is {strTime}")
+        #
+        # elif 'open code' in query:
+        #     codePath = ""
+        #     os.startfile(codePath)
+        #
+        # elif 'email to sahil' in query:
+        #     try:
+        #         speak("What should I say?")
+        #         content = takeCommand()
+        #         to = "shahil.ks011@gmail.com"
+        #         sendEmail(to, content)
+        #         speak("Email has been sent!")
+        #     except Exception as e:
+        #         print(e)
+        #         speak("Sorry sahil sir. I am not able to send this email")
