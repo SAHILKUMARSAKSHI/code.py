@@ -2,6 +2,8 @@ from __future__ import print_function
 import speech_recognition as sr
 import os
 import time
+
+from google.auth.external_account_authorized_user import Credentials
 from gtts import gTTS
 import datetime
 import pyjokes
@@ -43,25 +45,46 @@ def talk(audio):
     engine.runAndWait()
 
 
-def takeCommand():
-    recog = sr.Recognizer()
+# def takeCommand():
+#     recog = sr.Recognizer()
+#
+#     with sr.Microphone() as source:
+#         print("Listening...")
+#         r.pause_threshold = 1
+#         audio = r.listen(source)
+#
+#     data = " "
+#
+#     try:
+#         data = recog.recognize_google(audio)
+#         print("You said: " + data)
+#     except sr.UnknownValueError:
+#         print("Assistant could not understand the audio")
+#     except sr.RequestError as ex:
+#         print("Request Error from Google Speech Recognition" + ex)
+#
+#     return data
 
+def takeCommand():
+    # It takes microphone input from the user and returns string output
+
+    r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
         r.pause_threshold = 1
         audio = r.listen(source)
 
-    data = " "
-
     try:
-        data = recog.recognize_google(audio)
-        print("You said: " + data)
-    except sr.UnknownValueError:
-        print("Assistant could not understand the audio")
-    except sr.RequestError as ex:
-        print("Request Error from Google Speech Recognition" + ex)
+        print("Recognizing...")
+        query = r.recognize_google(audio, language='en-in')
+        print(f"User said: {query}\n")
 
-    return data
+    except Exception as e:
+        # print(e)
+        print("Say that again please...")
+        return "None"
+    return query
+
 
 
 def response(text):
@@ -233,7 +256,7 @@ def note(text):
 #     events = events_result.get("items", [])
 #
 #
-# if not events:
+#     if not events:
 #         talk('No upcoming events found.')
 #     for event in events:
 #         start = event['start'].get('dateTime', event['start'].get('date'))
@@ -255,192 +278,196 @@ def note(text):
 #     exit()
 
 
-# def pizza():
-#     driver = webdriver.Chrome(
-#         r"C:\...\chromedriver.exe"  # Location of your webdriver
-#     )
-#     driver.maximize_window()  # Maximizes the browser window
-#
-#     talk("Opening Dominos")
-#     driver.get('https://www.dominos.co.in/')  # Open the site
-#     sleep(2)
-#
-#     talk("Getting ready to order")
-#     driver.find_element_by_link_text('ORDER ONLINE NOW').click()  # Click on order now button
-#     sleep(2)
-#
-#     talk("Finding your location")
-#     driver.find_element_by_class_name('srch-cnt-srch-inpt').click()  # Click on the location search
-#     sleep(2)
-#
-#     location = ""  # Enter your location
-#
-#     talk("Entering your location")
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div/div[3]/div/div[1]/div[2]/div/div[1]/input').send_keys(
-#         location)  # Send text to location search input field
-#     sleep(2)
-#
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div/div[3]/div/div[1]/div[2]/div[2]/div/ul/li[1]').click()  # Select the location from suggestions
-#     sleep(2)
-#
-#     try:
-#         driver.find_element_by_xpath(
-#             '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[1]/div[2]').click()  # Click on login button
-#         sleep(2)
-#     except:
-#         talk("Your location could not be found. Please try again later.")
-#         exit()
-#
-#     talk("Logging in")
-#     phone_num = ""  # Enter your phone number here
-#
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/form/div[1]/div[2]/input').send_keys(
-#         phone_num)  # Send text to phone number input field
-#     sleep(2)
-#
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/form/div[2]/input').click()
-#     sleep(2)
-#
-#     talk("What is your O T P? ")
-#     sleep(3)
-#
-#     otp_log = rec_audio()
-#
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input').send_keys(
-#         otp_log)  # Paste the OTP into the text field
-#     sleep(2)
-#
-#     driver.find_element_by_xpath(
-#         '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div[2]/button/span').click()  # Submit OTP
-#     sleep(2)
-#
-#     talk("Do you want me to order from your favorites?")
-#     query_fav = rec_audio()
-#
-#     if "yes" in query_fav:
-#         try:
-#             driver.find_element_by_xpath(
-#                 '//*[@id="mn-lft"]/div[6]/div/div[6]/div/div/div[2]/div[3]/div/button/span').click()  # Add your favorite pizza
-#             sleep(1)
-#         except:
-#             talk("The entered OTP is incorrect.")
-#             exit()
-#
-#         talk("Adding your favorites to cart")
-#         talk("Do you want me to add extra cheese to your pizza?")
-#         ex_cheese = rec_audio()
-#         if "yes" in ex_cheese:
-#             talk("Extra cheese added")
-#             driver.find_element_by_xpath(
-#                 '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[2]/button').click()  # Add extra cheese
-#         elif "no" in ex_cheese:
-#             driver.find_element_by_xpath(
-#                 '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[1]/button/span').click()
-#         else:
-#             talk("I dont know that")
-#             driver.find_element_by_xpath(
-#                 '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[1]/button/span').click()
-#
-#         driver.find_element_by_xpath(
-#             '//*[@id="mn-lft"]/div[16]/div/div[1]/div/div/div[2]/div[2]/div/button').click()  # Add a pepsi
-#         sleep(1)
-#
-#         talk("Would you like to increase the qty?")
-#         qty = rec_audio()
-#         qty_pizza = 0
-#         qty_pepsi = 0
-#         if "yes" in qty:
-#             talk("Would you like to increase the quantity of pizza?")
-#             wh_qty = rec_audio()
-#             if "yes" in wh_qty:
-#                 talk("How many more pizzas would you like to add? ")
-#                 try:
-#                     qty_pizza = rec_audio()
-#                     qty_pizza = int(qty_pizza)
-#                     if qty_pizza > 0:
-#                         talk_piz = f"Adding {qty_pizza} more pizzas"
-#                         talk(talk_piz)
-#                         for i in range(qty_pizza):
-#                             driver.find_element_by_xpath(
-#                                 '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div[2]/div/div/div[2]').click()
-#                 except:
-#                     talk("I dont know that.")
-#             else:
-#                 pass
-#
-#             talk("Would you like to increase the quantity of pepsi?")
-#             pep_qty = rec_audio()
-#             if "yes" in pep_qty:
-#                 talk("How many more pepsis would you like to add? ")
-#                 try:
-#                     qty_pepsi = rec_audio()
-#                     qty_pepsi = int(qty_pepsi)
-#                     if qty_pepsi > 0:
-#                         talk_pep = f"Adding {qty_pepsi} more pepsis"
-#                         talk(talk_pep)
-#                         for i in range(qty_pepsi):
-#                             driver.find_element_by_xpath(
-#                                 '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div[2]/div/div/div[2]').click()
-#                 except:
-#                     talk("I dont know that.")
-#             else:
-#                 pass
-#
-#         elif "no" in qty:
-#             pass
-#
-#         total_pizza = qty_pizza + 1
-#         total_pepsi = qty_pepsi + 1
-#         tell_num = f"This is your list of order. {total_pizza} Pizzas and {total_pepsi} Pepsis. Do you want to checkout?"
-#         talk(tell_num)
-#         check_order = rec_audio()
-#         if "yes" in check_order:
-#             talk("Checking out")
-#             driver.find_element_by_xpath(
-#                 '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/button').click()  # Click on checkout button
-#             sleep(1)
-#             total = driver.find_element_by_xpath(
-#                 '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[6]/div/div/div[6]/span[2]/span')
-#             total_price = f'total price is {total.text}'
-#             talk(total_price)
-#             sleep(1)
-#         else:
-#             exit()
-#
-#         talk("Placing your order")
-#         driver.find_element_by_xpath(
-#             '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[6]/div/div/div[8]/button').click()  # Click on place order button
-#         sleep(2)
-#
-#         talk("Saving your location")
-#         driver.find_element_by_xpath(
-#             '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div[3]/div/div/input').click()  # Save your location
-#         sleep(2)
-#
-#         talk("Do you want to confirm your order?")
-#         confirm = rec_audio()
-#         if "yes" in confirm:
-#             try:
-#                 driver.find_element_by_xpath(
-#                     '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/button').click()
-#                 sleep(2)
-#             except:
-#                 talk("The store is currently offline.")
-#                 exit()
-#
-#             talk("Placing your order")
-#
-#             talk("Your order is places successfully. Wait for Dominos to deliver your order. Enjoy your day!")
-#         else:
-#             exit()
-#
-#     else:
-#         exit()
+def rec_audio():
+    pass
+
+
+def pizza():
+    driver = webdriver.Chrome(
+        r"C:\...\chromedriver.exe"  # Location of your webdriver
+    )
+    driver.maximize_window()  # Maximizes the browser window
+
+    talk("Opening Dominos")
+    driver.get('https://www.dominos.co.in/')  # Open the site
+    sleep(2)
+
+    talk("Getting ready to order")
+    driver.find_element_by_link_text('ORDER ONLINE NOW').click()  # Click on order now button
+    sleep(2)
+
+    talk("Finding your location")
+    driver.find_element_by_class_name('srch-cnt-srch-inpt').click()  # Click on the location search
+    sleep(2)
+
+    location = ""  # Enter your location
+
+    talk("Entering your location")
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div/div[3]/div/div[1]/div[2]/div/div[1]/input').send_keys(
+        location)  # Send text to location search input field
+    sleep(2)
+
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div/div[3]/div/div[1]/div[2]/div[2]/div/ul/li[1]').click()  # Select the location from suggestions
+    sleep(2)
+
+    try:
+        driver.find_element_by_xpath(
+            '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[1]/div[2]').click()  # Click on login button
+        sleep(2)
+    except:
+        talk("Your location could not be found. Please try again later.")
+        exit()
+
+    talk("Logging in")
+    phone_num = ""  # Enter your phone number here
+
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/form/div[1]/div[2]/input').send_keys(
+        phone_num)  # Send text to phone number input field
+    sleep(2)
+
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/form/div[2]/input').click()
+    sleep(2)
+
+    talk("What is your O T P? ")
+    sleep(3)
+
+    otp_log = rec_audio()
+
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input').send_keys(
+        otp_log)  # Paste the OTP into the text field
+    sleep(2)
+
+    driver.find_element_by_xpath(
+        '//*[@id="__next"]/div/div/div[1]/div[1]/div/div[3]/div[3]/div[2]/div/div[3]/div/div/div/div[2]/div/div/div/div[2]/div[2]/button/span').click()  # Submit OTP
+    sleep(2)
+
+    talk("Do you want me to order from your favorites?")
+    query_fav = rec_audio()
+
+    if "yes" in query_fav:
+        try:
+            driver.find_element_by_xpath(
+                '//*[@id="mn-lft"]/div[6]/div/div[6]/div/div/div[2]/div[3]/div/button/span').click()  # Add your favorite pizza
+            sleep(1)
+        except:
+            talk("The entered OTP is incorrect.")
+            exit()
+
+        talk("Adding your favorites to cart")
+        talk("Do you want me to add extra cheese to your pizza?")
+        ex_cheese = rec_audio()
+        if "yes" in ex_cheese:
+            talk("Extra cheese added")
+            driver.find_element_by_xpath(
+                '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[2]/button').click()  # Add extra cheese
+        elif "no" in ex_cheese:
+            driver.find_element_by_xpath(
+                '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[1]/button/span').click()
+        else:
+            talk("I dont know that")
+            driver.find_element_by_xpath(
+                '//*[@id="mn-lft"]/div[6]/div/div[1]/div/div/div[2]/div[3]/div[1]/button/span').click()
+
+        driver.find_element_by_xpath(
+            '//*[@id="mn-lft"]/div[16]/div/div[1]/div/div/div[2]/div[2]/div/button').click()  # Add a pepsi
+        sleep(1)
+
+        talk("Would you like to increase the qty?")
+        qty = rec_audio()
+        qty_pizza = 0
+        qty_pepsi = 0
+        if "yes" in qty:
+            talk("Would you like to increase the quantity of pizza?")
+            wh_qty = rec_audio()
+            if "yes" in wh_qty:
+                talk("How many more pizzas would you like to add? ")
+                try:
+                    qty_pizza = rec_audio()
+                    qty_pizza = int(qty_pizza)
+                    if qty_pizza > 0:
+                        talk_piz = f"Adding {qty_pizza} more pizzas"
+                        talk(talk_piz)
+                        for i in range(qty_pizza):
+                            driver.find_element_by_xpath(
+                                '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div[2]/div/div/div[2]').click()
+                except:
+                    talk("I dont know that.")
+            else:
+                pass
+
+            talk("Would you like to increase the quantity of pepsi?")
+            pep_qty = rec_audio()
+            if "yes" in pep_qty:
+                talk("How many more pepsis would you like to add? ")
+                try:
+                    qty_pepsi = rec_audio()
+                    qty_pepsi = int(qty_pepsi)
+                    if qty_pepsi > 0:
+                        talk_pep = f"Adding {qty_pepsi} more pepsis"
+                        talk(talk_pep)
+                        for i in range(qty_pepsi):
+                            driver.find_element_by_xpath(
+                                '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div[2]/div/div/div[2]').click()
+                except:
+                    talk("I dont know that.")
+            else:
+                pass
+
+        elif "no" in qty:
+            pass
+
+        total_pizza = qty_pizza + 1
+        total_pepsi = qty_pepsi + 1
+        tell_num = f"This is your list of order. {total_pizza} Pizzas and {total_pepsi} Pepsis. Do you want to checkout?"
+        talk(tell_num)
+        check_order = rec_audio()
+        if "yes" in check_order:
+            talk("Checking out")
+            driver.find_element_by_xpath(
+                '//*[@id="__next"]/div/div/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/button').click()  # Click on checkout button
+            sleep(1)
+            total = driver.find_element_by_xpath(
+                '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[6]/div/div/div[6]/span[2]/span')
+            total_price = f'total price is {total.text}'
+            talk(total_price)
+            sleep(1)
+        else:
+            exit()
+
+        talk("Placing your order")
+        driver.find_element_by_xpath(
+            '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[6]/div/div/div[8]/button').click()  # Click on place order button
+        sleep(2)
+
+        talk("Saving your location")
+        driver.find_element_by_xpath(
+            '//*[@id="__next"]/div/div[1]/div[2]/div[3]/div[2]/div/div[3]/div/div[3]/div/div/div[3]/div/div/input').click()  # Save your location
+        sleep(2)
+
+        talk("Do you want to confirm your order?")
+        confirm = rec_audio()
+        if "yes" in confirm:
+            try:
+                driver.find_element_by_xpath(
+                    '//*[@id="__next"]/div/div[1]/div[2]/div/div[1]/div[2]/div/div[2]/div/div[2]/button').click()
+                sleep(2)
+            except:
+                talk("The store is currently offline.")
+                exit()
+
+            talk("Placing your order")
+
+            talk("Your order is places successfully. Wait for Dominos to deliver your order. Enjoy your day!")
+        else:
+            exit()
+
+    else:
+        exit()
 
 
 while True:
@@ -729,75 +756,75 @@ while True:
                 speak = speak + "Opening Microsoft OneNote"
                 os.startfile(r"C:\...\ONENOTE.EXE")
 
-            elif("Open word" in text):
+            elif "Open word" in text:
                 speak = speak + "Opening Microsoft Word"
                 os.startfile(r"C:\...\WINWORD.EXE")
 
-            elif("open xbox" in text):
+            elif "open xbox" in text:
                 speak = speak + "Opening Xbox"
                 os.startfile(r"C:\...\Xbox.exe")
 
-            elif("open onedrive" in text):
+            elif "open onedrive" in text:
                 speak = speak + "Opening OneDrive"
                 os.startfile(r"C:\Program Files\Microsoft OneDrive\OneDrive.exe")
 
-            elif("open skype" in text):
+            elif "open skype" in text:
                 speak = speak + "Opening Skype"
                 os.startfile(r"C:\...\Skype.exe")
 
-            elif("open photos" in text):
+            elif "open photos" in text:
                 speak = speak + "Opening Photos"
                 os.startfile(r"C:\...\Photos.exe")
 
-            elif("open sticky notes" in text):
+            elif "open sticky notes" in text:
                 speak = speak + "Opening Sticky Notes"
                 os.startfile(r"C:\...\StikyNot.exe")
 
-            elif("open snipping tool" in text):
+            elif "open snipping tool" in text:
                 speak = speak + "Opening Snipping Tool"
                 os.startfile(r"C:\...\SnippingTool.exe")
 
-            elif("open windows media player" in text):
+            elif "open windows media player" in text:
                 speak = speak + "Opening Windows Media Player"
                 os.startfile(r"C:\...\wmplayer.exe")
 
-            elif("open vlc media player" in text):
+            elif "open vlc media player" in text:
                 speak = speak + "Opening VLC Media Player"
                 os.startfile(r"C:\...\vlc.exe")
 
-            elif("open adobe reader" in text):
+            elif "open adobe reader" in text:
                 speak = speak + "Opening Adobe Reader"
                 os.startfile(r"C:\...\AcroRd32.exe")
 
-            elif("open notepad++" in text):
+            elif "open notepad++" in text:
                 speak = speak + "Opening Notepad++"
                 os.startfile(r"C:\...\notepad++.exe")
 
-            elif("open winrar" in text):
+            elif "open winrar" in text:
                 speak = speak + "Opening WinRAR"
                 os.startfile(r"C:\...\WinRAR.exe")
 
-            elif("open utorrent" in text):
+            elif "open utorrent" in text:
                 speak = speak + "Opening uTorrent"
                 os.startfile(r"C:\...\uTorrent.exe")
 
-            elif("open filezilla" in text):
+            elif "open filezilla" in text:
                 speak = speak + "Opening FileZilla"
                 os.startfile(r"C:\...\FileZilla.exe")
 
-            elif("open teamviewer" in text):
+            elif "open teamviewer" in text:
                 speak = speak + "Opening TeamViewer"
                 os.startfile(r"C:\...\TeamViewer.exe")
 
-            elif("open anydesk" in text):
+            elif "open anydesk" in text:
                 speak = speak + "Opening AnyDesk"
                 os.startfile(r"C:\...\AnyDesk.exe")
 
-            elif("open zoom" in text):
+            elif "open zoom" in text:
                 speak = speak + "Opening Zoom"
                 os.startfile(r"C:\...\Zoom.exe")
 
-            elif("open discord" in text):
+            elif "open discord" in text:
                 speak = speak + "Opening Discord"
 
             elif "exit" in text or "quit" in text:
