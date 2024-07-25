@@ -53,10 +53,10 @@ def takeCommand():
 
 
 def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server = smtplib.SMTP('shahil.ks011@gmail.com', 587)
     server.ehlo()
     server.starttls()
-    server.login('shahil.ks011@gmail.com', 'your-password')
+    server.login('shahil.ks011@gmail.com', 'godcoder#1')
     server.sendmail('shahil.ks011@gmail.com', to, content)
     server.close()
 

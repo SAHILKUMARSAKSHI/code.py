@@ -86,7 +86,6 @@ def takeCommand():
     return query
 
 
-
 def response(text):
     print(text)
     tts = gTTS(text=text, lang="en")
@@ -96,10 +95,8 @@ def response(text):
     os.remove(audio)
 
 
-
 def call(text):
     action_call = "assistant"
-
     text = text.lower()
 
     if action_call in text:
@@ -168,7 +165,7 @@ def today_date():
 
 
 def say_hello(text):
-    greet = ["hi", "hey", "hola", "greetings", "wassup", "hello"]
+    greet = ["hi", "hey", "hola", "greetings", "hello"]
 
     response = ["howdy", "whats good", "hello", "hey there"]
 
@@ -192,7 +189,7 @@ def send_email(to, content):
     server.starttls()
 
     # Enable low security in gmail
-    server.login("shahil.ks011@gmail.com", "godcoder#1")
+    server.login("shahil.ks011@gmail.com", " godcoder#1 ")
     server.sendmail("shahil.ks011@gmail.com", to, content)
     server.close()
 
@@ -206,76 +203,75 @@ def note(text):
     subprocess.Popen(["notepad.exe", file_name])
 
 
-# def google_calendar():
-#     """Shows basic usage of the Google Calendar API.
-#     Prints the start and name of the next 10 events on the user's calendar.
-#     """
-#     creds = None
-#     # The file token.json stores the user's access and refresh tokens, and is
-#     # created automatically when the authorization flow completes for the first
-#     # time.
-#     if os.path.exists("token.json"):
-#         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-#     # If there are no (valid) credentials available, let the user log in.
-#     if not creds or not creds.valid:
-#         if creds and creds.expired and creds.refresh_token:
-#             creds.refresh(Request())
-#         else:
-#             flow = InstalledAppFlow.from_client_secrets_file(
-#                 "credentials.json", SCOPES
-#             )
-#             creds = flow.run_local_server(port=0)
-#         # Save the credentials for the next run
-#         with open("token.json", "w") as token:
-#             token.write(creds.to_json())
-#
-#     try:
-#         service = build("calendar", "v3", credentials=creds)
-#
-#     finally:
-#         talk("Could not connect to the local wifi network. Please try again later.")
-#         exit()
-#
-#
-# def calendar_events(num, service):
-#     talk(f'Hey there! Good Day. Hope you are doing fine. These are the events to do today')
-#     # Call the Calendar API
-#     now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
-#     print("Getting the upcoming 10 events")
-#     events_result = (
-#         service.events()
-#         .list(
-#             calendarId="primary",
-#             timeMin=now,
-#             maxResults=10,
-#             singleEvents=True,
-#             orderBy="startTime",
-#         )
-#         .execute()
-#     )
-#     events = events_result.get("items", [])
-#
-#
-#     if not events:
-#         talk('No upcoming events found.')
-#     for event in events:
-#         start = event['start'].get('dateTime', event['start'].get('date'))
-#         events_today = (event['summary'])
-#         start_time = str(start.split("T")[1].split("-")[0])  # get the hour the event starts
-#         if int(start_time.split(":")[0]) < 12:  # if the event is in the morning
-#             start_time = start_time + "am"
-#         else:
-#             start_time = str(int(start_time.split(":")[0]) - 12)  # convert 24 hour time to regular
-#             start_time = start_time + "pm"
-#         talk(f'{events_today} at {start_time}')
-#
-#
-# try:
-#     service = google_calendar()
-#     calendar_events(10, service)
-# except:
-#     talk("Could not connect to the local wifi network. Please try again later.")
-#     exit()
+def google_calendar():
+    """Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 10 events on the user's calendar.
+    """
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build("calendar", "v3", credentials=creds)
+
+    finally:
+        talk("Could not connect to the local wifi network. Please try again later.")
+        exit()
+
+
+def calendar_events(num, service):
+    talk(f'Hey there! Good Day. Hope you are doing fine. These are the events to do today')
+    # Call the Calendar API
+    now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
+    print("Getting the upcoming 10 events")
+    events_result = (
+        service.events()
+        .list(
+            calendarId="primary",
+            timeMin=now,
+            maxResults=10,
+            singleEvents=True,
+            orderBy="startTime",
+        )
+        .execute()
+    )
+    events = events_result.get("items", [])
+
+    if not events:
+        talk('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        events_today = (event['summary'])
+        start_time = str(start.split("T")[1].split("-")[0])  # get the hour the event starts
+        if int(start_time.split(":")[0]) < 12:  # if the event is in the morning
+            start_time = start_time + "am"
+        else:
+            start_time = str(int(start_time.split(":")[0]) - 12)  # convert 24 hour time to regular
+            start_time = start_time + "pm"
+        talk(f'{events_today} at {start_time}')
+
+
+try:
+    service = google_calendar()
+    calendar_events(10, service)
+except:
+    talk("Could not connect to the local wifi network. Please try again later.")
+    exit()
 
 
 def rec_audio():
@@ -284,7 +280,7 @@ def rec_audio():
 
 def pizza():
     driver = webdriver.Chrome(
-        r"C:\...\chromedriver.exe"  # Location of your webdriver
+        r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs"  # Location of your webdriver
     )
     driver.maximize_window()  # Maximizes the browser window
 
@@ -478,7 +474,7 @@ while True:
 
         if call(text):
 
-            speak = speak + say_hello(text)
+            speak("say_hello")
 
             if "date" in text or "day" in text or "month" in text:
                 get_today = today_date()
@@ -535,67 +531,69 @@ while True:
                     speak = speak + "City Not Found"
 
             elif "who are you" in text or "define yourself" in text:
-                speak = speak + "Hello, I am an Assistant. Your Assistant. I am here to make your life easier. You can command me to perform various tasks such as asking questions or opening applications etcetera"
+                speak(
+                    "Hello, I am an Assistant. Your Assistant. I am here to make your life easier. You can command me to perform various tasks such as asking questions or opening applications")
 
             elif "who made you" in text or "created you" in text or " kon bnaya tumko " in text or " tumhe kisne bnaya " in text:
-                speak = speak + "I was created by Sahil Singh"
+                speak("I was created by Sahil Singh")
 
             elif "who is Sahil" in text or "who is sahil" in text:
-                speak = speak + "Sahil is a student of Electronics and Communication Engineering at Lovely Delhi technological University. He is a passionate coder and a tech enthusiast."
+                speak(
+                    "Sahil is a student of Electronics and Communication Engineering at Lovely Delhi technological University. He is a passionate coder and a tech enthusiast.")
 
             elif "who is your creator" in text or "who is your developer" in text:
-                speak = speak + "My creator is Sahil Singh"
+                speak("My creator is Sahil Singh")
 
             elif "who is your father" in text or "who is your dad" in text:
-                speak = speak + "My father is Sanjay kumar mukul"
+                speak("My father is Sanjay kumar mukul")
 
             elif "who is your mother" in text or "who is your mom" in text:
-                speak = speak + "My mother is Soni kumari"
+                speak("My mother is Soni kumari")
 
             elif "who is your brother" in text or "who is your bro" in text:
-                speak = speak + "My brother is Shahil Kumar Singh"
+                speak("My brother is Shahil Kumar Singh")
 
             elif "who is your sister" in text or "who is your sis" in text:
-                speak = speak + "My sister is Shalini Kumari"
+                speak("My sister is Shalini Kumari")
 
             elif "who is your friend" in text or "who is your buddy" in text:
-                speak = speak + "My friend is Sahil Kumar Singh"
+                speak("My friend is Sahil Kumar Singh")
 
             elif "who is your enemy" in text or "who is your rival" in text:
-                speak = speak + "No one, I am a friendly AI"
+                speak("No one, I am a friendly AI")
 
             elif "who is your best friend" in text or "who is your best buddy" in text:
-                speak = speak + "My best friend is Sahil Kumar Singh"
+                speak("My best friend is Sahil Kumar Singh")
 
             elif "who is your crush" in text or "who is your love" in text:
-                speak = speak + "I am an AI, I don't have any crush"
+                speak("I am an AI, I don't have any crush")
 
             elif "who is your girlfriend" in text or "who is your wife" in text:
-                speak = speak + "I am an AI, I don't have any girlfriend or wife"
+                speak("I am an AI, I don't have any girlfriend or wife")
 
             elif "who is your boyfriend" in text or "who is your husband" in text:
-                speak = speak + "I am an AI, I don't have any boyfriend or husband"
+                speak("I am an AI, I don't have any boyfriend or husband")
 
             elif "who is your teacher" in text or "who is your mentor" in text:
-                speak = speak + "My teacher is Sahil Singh"
+                speak("My teacher is Sahil Singh")
 
             elif "who is your student" in text or "who is your pupil" in text:
-                speak = speak + "I am an AI, I don't have any student or pupil"
+                speak("I am an AI, I don't have any student or pupil")
 
             elif "who is your boss" in text or "who is your master" in text:
-                speak = speak + "My boss is Sahil Singh"
+                speak("My boss is Sahil Singh")
 
             elif "who is your employee" in text or "who is your worker" in text:
-                speak = speak + "I am an AI, I don't have any employee or worker"
+                speak("I am an AI, I don't have any employee or worker")
 
-            elif("who is your servant" in text or "who is your slave" in text):
-                speak = speak + "I am an AI, I don't have any servant or slave"
+            elif "who is your servant" in text or "who is your slave" in text:
+                speak("I am an AI, I don't have any servant or slave")
 
             elif "who is your customer" in text or "who is your client" in text:
-                speak = speak + "I am an AI, I don't have any customer or client"
+                speak("I am an AI, I don't have any customer or client")
 
             elif "who is your fan" in text or "who is your follower" in text:
-                speak = speak + "I am an AI, I don't have any fan or follower"
+                speak("I am an AI, I don't have any fan or follower")
 
 
 
@@ -603,20 +601,20 @@ while True:
 
 
             elif "your name" in text:
-                speak = speak + "My name is Assistant"
+                speak("My name is Assistant")
 
             elif "who am I" in text:
-                speak = speak + "You must probably be a human"
+                speak("You must probably be a human")
 
             elif "why do you exist" in text or "why did you come to this word" in text:
-                speak = speak + "It is a secret"
+                speak("It is a secret")
 
             elif "how are you" in text:
-                speak = speak + "I am awesome, Thank you"
-                speak = speak + "\nHow are you?"
+                speak("I am awesome, Thank you")
+                speak("\nHow are you?")
 
             elif "fine" in text or "good" in text:
-                speak = speak + "It's good to know that your fine"
+                speak("It's good to know that your fine")
 
             elif "don't listen" in text or "stop listening" in text or "do not listen" in text:
                 talk("for how many seconds do you want me to sleep")
@@ -688,7 +686,7 @@ while True:
                 speak = speak + "Opening Disk Management"
                 os.system("diskmgmt.msc")
 
-            elif("open whatsapp" in text):
+            elif "open whatsapp" in text:
                 speak = speak + "Opening Whatsapp"
                 os.startfile(r"C:\...\WhatsApp.exe")
 
@@ -716,7 +714,7 @@ while True:
                 speak = speak + "Opening Microsoft Store"
                 os.startfile(r"C:\...\Store.exe")
 
-            elif("open popsql" in text):
+            elif "open popsql" in text:
                 speak = speak + "Opening PopSQL"
                 os.startfile(r"C:\Users\shahi\OneDrive\Desktop\PopSQL-Setup-1.0.128.exe")
 
@@ -744,15 +742,15 @@ while True:
                 speak = speak + "Opening My Dell"
                 os.startfile(r"C:\...\DellSupportCenter.exe")
 
-            elif("open powerpoint" in text):
+            elif "open powerpoint" in text:
                 speak = speak + "Opening Microsoft PowerPoint"
                 os.startfile(r"C:\...\POWERPNT.EXE")
 
-            elif("open outlook" in text):
+            elif "open outlook" in text:
                 speak = speak + "Opening Microsoft Outlook"
                 os.startfile(r"C:\...\OUTLOOK.EXE")
 
-            elif("open onenote" in text):
+            elif "open onenote" in text:
                 speak = speak + "Opening Microsoft OneNote"
                 os.startfile(r"C:\...\ONENOTE.EXE")
 
@@ -1000,8 +998,6 @@ while True:
 
             elif "order a pizza" in text or "pizza" in text:
                 pizza()
-
-
 
             # Assistant Audio speak
             response(speak)
