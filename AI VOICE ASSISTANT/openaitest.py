@@ -26,7 +26,7 @@ print(response)
     }
   ],
   "created": 1683815400,
-  "id": "cmpl-7F1aqg7BkzIY8vBnCxYQh8Xp4wO85",
+  "id": "comply-7F1aqg7BkzIY8vBnCxYQh8Xp4wO85",
   "model": "text-davinci-003",
   "object": "text_completion",
   "usage": {
